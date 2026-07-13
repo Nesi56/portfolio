@@ -1,0 +1,17 @@
+GITHUB PAGES DEPLOYMENT
+
+1. Extract this ZIP on your computer.
+2. Upload the CONTENTS of the extracted folder to the ROOT of your GitHub repository.
+   You should immediately see index.html, styles.css, script.js, assets, and .nojekyll.
+3. In GitHub, open Settings > Pages.
+4. Under Build and deployment:
+   Source: Deploy from a branch
+   Branch: main
+   Folder: / (root)
+5. Save and wait for the Pages deployment to finish.
+
+URL:
+- Repository named nesi56.github.io: https://nesi56.github.io/
+- Any other repository, such as portfolio: https://nesi56.github.io/portfolio/
+
+Do not upload the ZIP file by itself. Do not leave all files inside another folder.

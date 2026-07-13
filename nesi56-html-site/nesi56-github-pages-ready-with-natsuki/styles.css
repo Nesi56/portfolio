@@ -338,12 +338,12 @@ h1 span { color: #7a6b99; text-shadow: 2px 2px 0 #dfd4e6; }
   position: absolute;
   z-index: 1;
   width: 100%;
-  height: calc(100% - 88px);
+  height: calc(100% + 72px);
   left: 0;
-  top: -1px;
+  top: -58px;
   object-fit: contain;
   object-position: center bottom;
-  filter: drop-shadow(4px 6px 0 rgba(81,70,87,.12));
+  filter: drop-shadow(4px 6px 0 rgba(81,70,87,.16));
 }
 .pixel-heart { position: absolute; z-index: 0; color: rgba(181,108,140,.35); font: 22px "Courier New", monospace; animation: float-heart 3s ease-in-out infinite; }
 .heart-one { top: 15%; left: 8%; }

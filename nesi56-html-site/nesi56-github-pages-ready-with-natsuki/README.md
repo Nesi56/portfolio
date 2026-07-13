@@ -35,10 +35,15 @@ Then visit `http://localhost:8000`.
 - Main writing and page structure: `index.html`
 - Colors and layout: `styles.css`
 - Projects, terminal commands, and interactions: `script.js`
-- Character art: `assets/natsuki.svg`
+- Character art: `assets/natsuki.png`
 
 The project list automatically requests public repositories from `github.com/nesi56`.
 
 ## Fan disclaimer
 
 This is an unofficial fan-made design. Natsuki and Doki Doki Literature Club are associated with Team Salvato. This project is not affiliated with or endorsed by them.
+
+
+## Character image
+
+The homepage uses the uploaded Natsuki PNG at `assets/natsuki.png`.
