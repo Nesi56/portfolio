@@ -3,10 +3,10 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="theme-color" content="#d6cfe3">
-  <meta name="description" content="nesi56 — a calm retro developer portfolio.">
+  <meta name="theme-color" content="#1a0b10">
+  <meta name="description" content="nesi56 — a Windows 98, hacker, and visual-novel inspired GitHub portfolio.">
   <meta property="og:title" content="nesi56.exe">
-  <meta property="og:description" content="A Windows 98-inspired GitHub portfolio with visual-novel energy.">
+  <meta property="og:description" content="A burgundy hacker desktop portfolio with Doki Doki energy.">
   <title>nesi56.exe — GitHub Portfolio</title>
   <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
   <link rel="stylesheet" href="styles.css">
@@ -15,15 +15,19 @@
   <div class="boot-screen" id="bootScreen" aria-hidden="true">
     <div class="boot-card">
       <div class="boot-logo">N56</div>
-      <p>Starting calmOS 98...</p>
+      <p>Booting nesi56 command center...</p>
       <div class="boot-progress"><span></span></div>
     </div>
   </div>
 
   <div class="desktop" id="desktop">
     <div class="wallpaper-grid" aria-hidden="true"></div>
-    <div class="floating-note note-a" aria-hidden="true">make something cute.</div>
-    <div class="floating-note note-b" aria-hidden="true">sudo pacman -S confidence</div>
+    <div class="scanlines" aria-hidden="true"></div>
+    <div class="orbital-ring orbital-a" aria-hidden="true"></div>
+    <div class="orbital-ring orbital-b" aria-hidden="true"></div>
+    <div class="floating-note note-a" aria-hidden="true">hyprctl dispatch workspace 1</div>
+    <div class="floating-note note-b" aria-hidden="true">ring0 // cute but dangerous</div>
+    <div class="floating-note note-c" aria-hidden="true">mission profile: build, break, iterate</div>
 
     <aside class="desktop-icons" aria-label="Desktop shortcuts">
       <button class="desktop-shortcut" data-open-tab="home">
@@ -33,6 +37,10 @@
       <button class="desktop-shortcut" data-open-tab="projects">
         <span class="icon folder-icon">▰</span>
         <span>projects</span>
+      </button>
+      <button class="desktop-shortcut" data-open-tab="stack">
+        <span class="icon arch-icon">△</span>
+        <span>systems</span>
       </button>
       <button class="desktop-shortcut" data-open-tab="terminal">
         <span class="icon terminal-icon">›_</span>
@@ -49,7 +57,7 @@
         <div class="titlebar-title">
           <span class="app-icon">N</span>
           <strong>nesi56.exe</strong>
-          <span class="title-muted">— portfolio viewer</span>
+          <span class="title-muted">— mission console // portfolio viewer</span>
         </div>
         <div class="window-controls" aria-label="Window controls">
           <button id="minimizeBtn" aria-label="Minimize">_</button>
@@ -61,43 +69,57 @@
       <nav class="menu-bar" aria-label="Program menu">
         <button data-open-tab="home"><u>F</u>ile</button>
         <button data-open-tab="projects"><u>V</u>iew</button>
-        <button data-open-tab="stack"><u>S</u>ystem</button>
-        <button id="poemButton"><u>P</u>oem</button>
-        <span class="menu-message" id="menuMessage">“Don’t underestimate cute code.”</span>
+        <button data-open-tab="stack"><u>S</u>ystems</button>
+        <button data-open-tab="terminal"><u>T</u>erminal</button>
+        <button id="poemButton"><u>N</u>ote</button>
+        <span class="menu-message" id="menuMessage">“Cute interface. Serious intent.”</span>
       </nav>
 
       <div class="tabbar" role="tablist" aria-label="Portfolio pages">
         <button class="tab active" role="tab" aria-selected="true" data-tab="home"><span>♡</span>Home</button>
         <button class="tab" role="tab" aria-selected="false" data-tab="projects"><span>▦</span>Projects</button>
-        <button class="tab" role="tab" aria-selected="false" data-tab="stack"><span>△</span>Stack</button>
+        <button class="tab" role="tab" aria-selected="false" data-tab="stack"><span>△</span>Systems</button>
         <button class="tab" role="tab" aria-selected="false" data-tab="terminal"><span>⌘</span>Terminal</button>
-        <button class="tab" role="tab" aria-selected="false" data-tab="readme"><span>▤</span>README</button>
+        <button class="tab" role="tab" aria-selected="false" data-tab="readme"><span>▤</span>Intel</button>
       </div>
 
       <div class="window-body">
         <section class="page active" data-page="home" aria-labelledby="home-title">
           <div class="home-grid">
             <div class="hero-copy">
-              <div class="path-label">C:\USERS\NESI56\PORTFOLIO</div>
-              <h1 id="home-title">Hi, I’m <span>nesi56</span>.</h1>
+              <div class="path-label">C:\OPS\NESI56\PORTFOLIO</div>
+              <h1 id="home-title">A portfolio with <span>hacker nerve</span>, <span>doki charm</span>, and <span>mission-control focus</span>.</h1>
               <p class="hero-text">
-                I build software, experiments, and interfaces that feel a little more alive than they need to.
+                Welcome to the nesi56 command center: a dark retro desktop shaped by Arch and Hyprland aesthetics, a little Terry Davis style low-level curiosity, and aerospace-engineering energy.
               </p>
+
               <div class="hero-actions">
                 <button class="retro-button primary" data-open-tab="projects">Open projects →</button>
                 <a class="retro-button" href="https://github.com/nesi56" target="_blank" rel="noreferrer">Visit GitHub</a>
               </div>
+
               <div class="system-note">
-                <span class="info-badge">i</span>
+                <span class="info-badge">!</span>
                 <div>
-                  <strong>system message</strong>
-                  <p>No résumé buzzwords found. Curiosity is running normally.</p>
+                  <strong>ops status</strong>
+                  <p>Signal stable. Curiosity armed. Portfolio aesthetics calibrated for code, systems, intel-board vibes, and launch-day confidence.</p>
                 </div>
               </div>
+
+              <div class="chip-row" aria-label="Theme tags">
+                <span class="tech-chip">arch-like</span>
+                <span class="tech-chip">hyprland feel</span>
+                <span class="tech-chip">red-team aesthetic</span>
+                <span class="tech-chip">space systems</span>
+                <span class="tech-chip">win98 shell</span>
+                <span class="tech-chip">doki doki mood</span>
+              </div>
+
               <div class="mini-stats" aria-label="Portfolio quick facts">
                 <div><strong id="repoCount">--</strong><span>public repos</span></div>
-                <div><strong>HTML</strong><span>no framework</span></div>
-                <div><strong>98.56</strong><span>calmOS build</span></div>
+                <div><strong>HTML/CSS/JS</strong><span>hand-built shell</span></div>
+                <div><strong>Hypr</strong><span>tiling inspiration</span></div>
+                <div><strong>Mission</strong><span>ship ambitious work</span></div>
               </div>
             </div>
 
@@ -106,9 +128,10 @@
                 <div class="pixel-heart heart-one">♥</div>
                 <div class="pixel-heart heart-two">♥</div>
                 <img src="assets/natsuki.png" alt="Natsuki from Doki Doki Literature Club">
+                <div class="stage-label">NATSUKI // VISUAL SUPPORT UNIT</div>
                 <div class="dialogue-box">
                   <div class="speaker-name">Natsuki</div>
-                  <p id="dialogueText">I sorted your projects by cuteness, usefulness, and how many bugs they survived.</p>
+                  <p id="dialogueText">Okay, fine. I helped make your portfolio look cooler. Just don’t waste it by shipping something boring.</p>
                   <button class="dialogue-next" id="dialogueNext" aria-label="Next dialogue">▼</button>
                 </div>
               </div>
@@ -119,11 +142,12 @@
         <section class="page" data-page="projects" aria-labelledby="projects-title">
           <div class="section-heading">
             <div>
-              <div class="path-label">C:\USERS\NESI56\REPOSITORIES</div>
-              <h2 id="projects-title">Latest projects</h2>
+              <div class="path-label">C:\OPS\NESI56\REPOSITORIES</div>
+              <h2 id="projects-title">Mission builds</h2>
             </div>
             <span class="object-count" id="projectStatus">contacting github...</span>
           </div>
+          <p class="section-copy">Live repositories from GitHub, displayed like a launch board.</p>
           <div class="project-grid" id="projectGrid" aria-live="polite">
             <article class="project-card skeleton"><div></div><div></div><div></div></article>
             <article class="project-card skeleton"><div></div><div></div><div></div></article>
@@ -134,8 +158,8 @@
         <section class="page" data-page="stack" aria-labelledby="stack-title">
           <div class="section-heading">
             <div>
-              <div class="path-label">pacman -Qe | grep creativity</div>
-              <h2 id="stack-title">Tools & systems</h2>
+              <div class="path-label">pacman -Qe | grep mission</div>
+              <h2 id="stack-title">Systems & signal</h2>
             </div>
             <div class="arch-mark" title="Arch Linux-inspired mark">△</div>
           </div>
@@ -143,33 +167,38 @@
           <div class="stack-grid">
             <div class="file-tree panel-inset">
               <div class="panel-title">skills.tree</div>
-              <pre>nesi56/
+<pre>nesi56/
 ├── web/
 │   ├── HTML
 │   ├── CSS
 │   ├── JavaScript
-│   └── responsive design
-├── systems/
-│   ├── Arch Linux
-│   ├── shell scripting
-│   └── low-level curiosity
-├── creative/
-│   ├── interface design
-│   ├── visual experiments
-│   └── pixel art
-└── currently-learning/
-    └── things that look impossible</pre>
+│   └── UI systems
+├── linux/
+│   ├── Arch-inspired workflow
+│   ├── Hyprland aesthetic
+│   └── shell-driven habits
+├── security/
+│   ├── hacker tooling vibes
+│   ├── red-team energy
+│   └── intel-board layouts
+├── engineering/
+│   ├── aerospace energy
+│   ├── systems thinking
+│   └── mission control visuals
+└── low-level-curiosity/
+    └── Terry-Davis-style build spirit</pre>
             </div>
 
             <div class="process-panel panel-raised">
               <h3>process monitor</h3>
-              <div class="meter" data-value="94"><div><span>shipping ideas</span><small>94%</small></div><div class="meter-track"><span></span></div></div>
-              <div class="meter" data-value="82"><div><span>debugging calmly</span><small>82%</small></div><div class="meter-track"><span></span></div></div>
-              <div class="meter" data-value="88"><div><span>reading the docs</span><small>88%</small></div><div class="meter-track"><span></span></div></div>
-              <div class="meter" data-value="67"><div><span>naming variables</span><small>67%</small></div><div class="meter-track"><span></span></div></div>
+              <div class="meter" data-value="96"><div><span>shipping ideas</span><small>96%</small></div><div class="meter-track"><span></span></div></div>
+              <div class="meter" data-value="91"><div><span>systems curiosity</span><small>91%</small></div><div class="meter-track"><span></span></div></div>
+              <div class="meter" data-value="89"><div><span>debugging under pressure</span><small>89%</small></div><div class="meter-track"><span></span></div></div>
+              <div class="meter" data-value="84"><div><span>launch aesthetics</span><small>84%</small></div><div class="meter-track"><span></span></div></div>
+              <div class="meter" data-value="93"><div><span>interface design</span><small>93%</small></div><div class="meter-track"><span></span></div></div>
               <div class="temple-note">
                 <strong>ring-0 thought:</strong>
-                <p>A small program can still hold a huge idea.</p>
+                <p>Build things because they are beautiful, difficult, useful, or strange — preferably all four.</p>
               </div>
             </div>
           </div>
@@ -186,7 +215,7 @@
 
           <div class="terminal-window">
             <div class="terminal-output" id="terminalOutput" aria-live="polite">
-              <div>nesi56 shell [version 98.56]</div>
+              <div>nesi56 shell [version command-center 1.0]</div>
               <div>Type <span class="terminal-command">help</span> and press Enter.</div>
             </div>
             <form class="terminal-form" id="terminalForm">
@@ -194,19 +223,26 @@
               <input id="terminalInput" autocomplete="off" spellcheck="false" aria-label="Terminal command">
             </form>
           </div>
-          <p class="terminal-hint">Try: help, about, projects, neofetch, poem, clear</p>
+          <p class="terminal-hint">Try: help, about, projects, neofetch, intel, launch, poem, clear</p>
         </section>
 
         <section class="page" data-page="readme" aria-labelledby="readme-title">
           <div class="readme-card panel-raised">
-            <div class="readme-heart">♡</div>
+            <div class="readme-heart">◎</div>
             <div>
-              <div class="path-label">README.TXT</div>
-              <h2 id="readme-title">Thanks for stopping by.</h2>
+              <div class="path-label">INTEL.TXT</div>
+              <h2 id="readme-title">Design brief</h2>
               <p>
-                This is a public GitHub portfolio for <strong>nesi56</strong>. It intentionally contains no private personal information.
+                This portfolio is built for <strong>nesi56</strong> with no personal information, just public GitHub identity and a strong aesthetic direction: dark burgundy, black, retro GUI, hacker terminal, mission-control order, and visual-novel personality.
               </p>
-              <blockquote>“The computer is a canvas, even when the canvas has beveled gray buttons.”</blockquote>
+              <blockquote>“The best interfaces feel like a machine, a moodboard, and a mission plan at the same time.”</blockquote>
+              <ul class="intel-list">
+                <li>Windows 98 shell language</li>
+                <li>Arch / Hyprland inspired feel</li>
+                <li>Doki Doki fan vibe with Natsuki image</li>
+                <li>Low-level curiosity inspired by Terry Davis</li>
+                <li>CIA-style intel board and aerospace energy</li>
+              </ul>
               <p class="fan-note">
                 Unofficial fan-made design. Natsuki and Doki Doki Literature Club are associated with Team Salvato. This site is not affiliated with or endorsed by them.
               </p>
@@ -219,7 +255,7 @@
       <footer class="statusbar">
         <span class="status-main"><i></i><span id="statusText">ready</span></span>
         <span>HTML + CSS + JS</span>
-        <span>calmOS 98.56</span>
+        <span>command-center build</span>
       </footer>
     </main>
 
@@ -236,9 +272,9 @@
           <div class="start-items">
             <button data-open-tab="home"><span>♡</span><div><strong>Home</strong><small>Open home.exe</small></div></button>
             <button data-open-tab="projects"><span>▦</span><div><strong>Projects</strong><small>Open projects.exe</small></div></button>
-            <button data-open-tab="stack"><span>△</span><div><strong>Stack</strong><small>Inspect installed packages</small></div></button>
+            <button data-open-tab="stack"><span>△</span><div><strong>Systems</strong><small>Inspect installed packages</small></div></button>
             <button data-open-tab="terminal"><span>⌘</span><div><strong>Terminal</strong><small>Launch ttyN56</small></div></button>
-            <button data-open-tab="readme"><span>▤</span><div><strong>README</strong><small>Read legal.txt</small></div></button>
+            <button data-open-tab="readme"><span>◎</span><div><strong>Intel</strong><small>Read intel.txt</small></div></button>
             <div class="start-divider"></div>
             <button id="shutdownButton"><span>◉</span><div><strong>Shut Down...</strong><small>Close unnecessary tabs</small></div></button>
           </div>
@@ -246,21 +282,21 @@
       </div>
       <button class="task-window active" id="taskWindow"><span>N</span> nesi56.exe</button>
       <div class="task-spacer"></div>
-      <div class="system-tray"><span title="sound">♬</span><span title="Arch Linux">△</span><time id="clock">--:--</time></div>
+      <div class="system-tray"><span title="signal">☍</span><span title="Arch Linux">△</span><time id="clock">--:--</time></div>
     </footer>
   </div>
 
   <div class="poem-modal" id="poemModal" hidden>
     <div class="modal-window" role="dialog" aria-modal="true" aria-labelledby="poemTitle">
       <div class="titlebar">
-        <div class="titlebar-title"><span class="app-icon">♡</span><strong id="poemTitle">cupcake.txt</strong></div>
+        <div class="titlebar-title"><span class="app-icon">♡</span><strong id="poemTitle">note.txt</strong></div>
         <button class="modal-close" id="poemClose" aria-label="Close poem">×</button>
       </div>
       <div class="poem-paper">
-        <p>Pink pixels on a quiet screen,</p>
-        <p>soft code where sharp bugs used to be.</p>
-        <p>A little stubborn, a little sweet—</p>
-        <p>save, commit, and ship the dream.</p>
+        <p>Black glass and burgundy light,</p>
+        <p>quiet code on a launch-night screen.</p>
+        <p>Cute enough to invite you in,</p>
+        <p>sharp enough to make you stay.</p>
         <span>— generated locally by nesi56.exe</span>
       </div>
     </div>

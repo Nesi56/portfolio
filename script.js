@@ -20,17 +20,17 @@
   let dragState = null;
 
   const dialogue = [
-    'I sorted your projects by cuteness, usefulness, and how many bugs they survived.',
-    'Plain JavaScript? Good. Fewer dependencies means more room for manga.',
-    'You use Arch, by the way. Yes, I was legally required to say that.',
-    'Open the terminal and type “poem”. I made it only a little embarrassing.',
-    'Now stop staring at the desktop and ship something.'
+    'Okay, fine. I helped make your portfolio look cooler. Just don’t waste it by shipping something boring.',
+    'Arch and Hyprland vibes? Good. If the desktop doesn’t look slightly dangerous, what’s even the point?',
+    'That mission-control layout? Totally intentional. Cute can still look classified.',
+    'The Terry-Davis-style part is the build spirit: make it weird, make it bold, make it yours.',
+    'Now go open the projects tab already. I didn’t stand here for nothing.'
   ];
   let dialogueIndex = 0;
 
   const fallbackProjects = [
     {
-      name: 'project-one',
+      name: 'mission-one',
       description: 'Connect this card to one of your pinned GitHub repositories.',
       html_url: 'https://github.com/nesi56',
       language: 'JavaScript',
@@ -38,16 +38,16 @@
       updated_at: new Date().toISOString()
     },
     {
-      name: 'project-two',
-      description: 'A placeholder for your next useful, strange, or ambitious build.',
+      name: 'mission-two',
+      description: 'A placeholder for the next bold, useful, or experimental build.',
       html_url: 'https://github.com/nesi56',
       language: 'HTML',
       stargazers_count: 0,
       updated_at: new Date().toISOString()
     },
     {
-      name: 'project-three',
-      description: 'Replace this fallback by making a public repository on GitHub.',
+      name: 'mission-three',
+      description: 'Replace this fallback by pushing another public repository.',
       html_url: 'https://github.com/nesi56',
       language: 'CSS',
       stargazers_count: 0,
@@ -116,7 +116,7 @@
   $('#maximizeBtn').addEventListener('click', () => {
     isMaximized = !isMaximized;
     windowEl.classList.toggle('maximized', isMaximized);
-    setStatus(isMaximized ? 'maximum whimsy enabled' : 'window restored');
+    setStatus(isMaximized ? 'maximum mission mode enabled' : 'window restored');
   });
 
   $('#closeBtn').addEventListener('click', () => {
@@ -148,7 +148,7 @@
     startMenu.hidden = true;
     startButton.classList.remove('pressed');
     setStatus('it is now safe to close unnecessary tabs');
-    $('#menuMessage').textContent = '“Go outside for five minutes. The code will still be here.”';
+    $('#menuMessage').textContent = '“Log off, regroup, come back stronger.”';
   });
 
   $('#dialogueNext').addEventListener('click', () => {
@@ -159,7 +159,7 @@
 
   function showPoem() {
     poemModal.hidden = false;
-    setStatus('opened cupcake.txt');
+    setStatus('opened note.txt');
   }
   function hidePoem() { poemModal.hidden = true; }
   $('#poemButton').addEventListener('click', showPoem);
@@ -193,12 +193,12 @@
 
   function renderProjects(projects, sourceText) {
     const palette = [
-      ['#59627f', '#a89fbd'],
-      ['#79a5a3', '#d5ded5'],
-      ['#b18a9f', '#e1c5cf'],
-      ['#8b9db1', '#d7dfdf'],
-      ['#8f8470', '#e6d8b7'],
-      ['#65617c', '#b8b0c5']
+      ['#37111d', '#8a334e'],
+      ['#131f28', '#436780'],
+      ['#4a1625', '#c06d8a'],
+      ['#1c1718', '#76505c'],
+      ['#2b2834', '#808aa8'],
+      ['#3b121f', '#a24f66']
     ];
 
     $('#projectGrid').innerHTML = projects.slice(0, 6).map((project, index) => {
@@ -249,27 +249,41 @@
 
   const commands = {
     help: [
-      'commands: help, about, stack, projects, github, neofetch, poem, date, clear'
+      'commands: help, about, stack, projects, github, neofetch, intel, launch, poem, date, clear'
     ],
     about: [
-      'nesi56 // building useful, strange, and playful things on the web',
-      'portfolio // plain HTML, CSS, and JavaScript'
+      'nesi56 // building useful, strange, and ambitious things',
+      'portfolio // plain HTML, CSS, and JavaScript // burgundy command center build'
     ],
-    stack: ['html  css  javascript  arch-linux  shell  curiosity'],
+    stack: ['html  css  javascript  arch-ish  hyprland-feel  aerospace  shell  curiosity'],
     projects: ['Opening projects.exe...'],
     github: ['Opening github.com/nesi56...'],
     neofetch: [
       '       /\\        guest@nesi56',
-      '      /  \\       os: calmOS 98.56',
+      '      /  \\       os: nesi56 command center',
       '     / /\\ \\      base: Arch-ish',
-      '    / ____ \\     shell: imagination',
-      '   /_/    \\_\\    wm: beveled-dreams',
-      '                  uptime: still learning'
+      '    / ____ \\     wm: Hyprland-inspired mood',
+      '   /_/    \\_\\    shell: imagination',
+      '                  status: mission ready'
+    ],
+    intel: [
+      'theme profile:',
+      '- doki doki atmosphere',
+      '- dark burgundy and black',
+      '- hacker / red-team aesthetic',
+      '- aerospace mission-control energy'
+    ],
+    launch: [
+      'launch checklist:',
+      '[x] curiosity',
+      '[x] systems thinking',
+      '[x] visual identity',
+      '[ ] more public repos'
     ],
     poem: [
-      'pink pixels / quiet keys',
-      'a stubborn little program',
-      'refuses to crash'
+      'black glass / burgundy light',
+      'stubborn code under a calm face',
+      'cute enough to approach / sharp enough to remember'
     ]
   };
 
@@ -315,7 +329,6 @@
     }
   });
 
-  // Dragging is enabled on non-mobile layouts and disabled while maximized.
   titlebar.addEventListener('pointerdown', event => {
     if (event.target.closest('button') || isMaximized || window.innerWidth <= 670) return;
     const rect = windowEl.getBoundingClientRect();

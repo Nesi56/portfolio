@@ -1,49 +1,37 @@
-# nesi56.exe
+# nesi56.exe — Ultimate GitHub Pages Portfolio
 
-A framework-free GitHub portfolio built with plain HTML, CSS, and JavaScript.
+This is the updated HTML/CSS/JS version of the portfolio with:
 
-## Features
+- dark burgundy + black palette
+- hacker / command-center feel
+- Arch / Hyprland inspiration
+- Doki Doki / Natsuki visual vibe
+- Windows 98 shell styling
+- terminal commands
+- GitHub repo auto-loading from `nesi56`
+- GitHub Pages-ready file structure
 
-- Windows 98-inspired draggable desktop window
-- Natsuki-themed unofficial fan presentation
-- Responsive mobile layout
-- Live public repository loading from the GitHub API
-- Offline project fallbacks
-- Interactive terminal
-- Start menu, tabs, minimize, maximize, close, and poem modal
-- No private personal information
+## Upload to GitHub Pages
 
-## Run locally
+Upload the **contents of this folder** directly to the root of your repository:
 
-No build step is required. Open `index.html`, or use a small local server:
+- `index.html`
+- `styles.css`
+- `script.js`
+- `404.html`
+- `.nojekyll`
+- `assets/`
 
-```bash
-python -m http.server 8000
-```
+Then go to:
 
-Then visit `http://localhost:8000`.
+**Settings → Pages**
 
-## Deploy on GitHub Pages
+Set:
 
-1. Create a repository, for example `nesi56.github.io`.
-2. Upload these files to the repository root.
-3. Open **Settings → Pages**.
-4. Choose **Deploy from a branch**, then select `main` and `/ (root)`.
+- **Source:** Deploy from a branch
+- **Branch:** `main`
+- **Folder:** `/ (root)`
 
-## Customize
+If your repository is named `github-portfolio`, your URL should be:
 
-- Main writing and page structure: `index.html`
-- Colors and layout: `styles.css`
-- Projects, terminal commands, and interactions: `script.js`
-- Character art: `assets/natsuki.png`
-
-The project list automatically requests public repositories from `github.com/nesi56`.
-
-## Fan disclaimer
-
-This is an unofficial fan-made design. Natsuki and Doki Doki Literature Club are associated with Team Salvato. This project is not affiliated with or endorsed by them.
-
-
-## Character image
-
-The homepage uses the uploaded Natsuki PNG at `assets/natsuki.png`.
+`https://nesi56.github.io/github-portfolio/`
