@@ -3,10 +3,6 @@
 This is the updated HTML/CSS/JS version of the portfolio with:
 
 - dark burgundy + black palette
-- hacker / command-center feel
-- Arch / Hyprland inspiration
-- Doki Doki / Natsuki visual vibe
-- Windows 98 shell styling
 - terminal commands
 - GitHub repo auto-loading from `nesi56`
 - GitHub Pages-ready file structure
