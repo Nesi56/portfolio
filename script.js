@@ -61,14 +61,14 @@ function renderProjects(){
  const cover=element('div','project-cover');cover.setAttribute('aria-hidden','true');cover.append(element('span','cover-number',String(index+1).padStart(2,'0')),element('span','cover-name',repo.name),element('span','cover-type',repo.language||'Source code'));
  const content=element('div','project-content');content.append(element('h2','',repo.name),element('p','repo-meta',repo.fork?'Open-source fork':'Personal project'),element('p','',repo.description||'Source code and updates are available in this repository.'));
  const tags=element('div','project-tags');technologies(repo).forEach(name=>tags.append(element('span','',name)));content.append(tags);
- const actions=element('div','project-actions');const button=element('button','button','View details');button.addEventListener('click',()=>openProject(repo));actions.append(button,repoLink(repo,'Source code ↗'));content.append(actions);card.append(cover,content);grid.append(card);
+ const actions=element('div','project-actions');const button=element('button','button','View details');button.addEventListener('click',()=>openProject(repo));actions.append(button,repoLink(repo,'Source code'));content.append(actions);card.append(cover,content);grid.append(card);
  });
 }
 function openProject(repo){
  const dialog=document.querySelector('#projectDialog'),details=document.querySelector('#projectDetails');details.replaceChildren();
  const title=element('h2','',repo.name);title.id='detailTitle';dialog.setAttribute('aria-labelledby','detailTitle');
  details.append(title,element('p','',repo.description||'Explore the source code and updates on GitHub.'),element('h3','','Technologies'));
- const tags=element('div','project-tags');const tools=technologies(repo);tools.forEach(name=>tags.append(element('span','',name)));if(!tools.length)tags.append(element('p','','No languages or libraries reported yet.'));details.append(tags,element('p','repo-meta',`Updated ${new Date(repo.updated_at).toLocaleDateString()} · ${repo.stargazers_count} stars`),repoLink(repo,'Open repository ↗'));
+ const tags=element('div','project-tags');const tools=technologies(repo);tools.forEach(name=>tags.append(element('span','',name)));if(!tools.length)tags.append(element('p','','No languages or libraries reported yet.'));details.append(tags,element('p','repo-meta',`Updated ${new Date(repo.updated_at).toLocaleDateString()} · ${repo.stargazers_count} stars`),repoLink(repo,'Open repository'));
  dialog.showModal();
 }
 let selectedYear='all';
@@ -109,7 +109,7 @@ function renderBoard(){
  const other=[...connected].filter(language=>language!==selectedCluster).sort(),list=element('div','related-languages');
  other.forEach(language=>{const count=related.filter(repo=>repoLanguages(repo).includes(language)).length;const button=element('button','related-language',`${language} · ${count}`);button.addEventListener('click',()=>selectCluster(language));list.append(button);});
  if(!other.length)list.append(element('p','','No other languages reported in these projects.'));detail.append(list,element('h3','','Shared projects'));
- related.forEach(repo=>{const item=element('article','skill-project');item.append(element('h3','',repo.name),element('p','',repo.description||'Public GitHub repository.'),element('p','connection-source',repoLanguages(repo).join(' · ')),repoLink(repo,'Explore repository ↗'));detail.append(item);});
+ related.forEach(repo=>{const item=element('article','skill-project');item.append(element('h3','',repo.name),element('p','',repo.description||'Public GitHub repository.'),element('p','connection-source',repoLanguages(repo).join(' · ')),repoLink(repo,'Explore repository'));detail.append(item);});
  const reset=element('button','button','Show all connections');reset.addEventListener('click',()=>{selectedCluster=null;renderBoard();});detail.append(reset);
 }
 async function loadRepositories(){
