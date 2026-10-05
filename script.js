@@ -9,7 +9,7 @@ document.addEventListener('keydown',event=>{if(event.key==='Escape'&&nav.classLi
 matchMedia('(min-width:721px)').addEventListener('change',event=>{if(event.matches)closeMenu();});
 
 const page=document.body.dataset.page;
-nav.querySelectorAll('a').forEach(link=>{const active=link.getAttribute('href')===`/${page}/`;link.classList.toggle('active',active);if(active)link.setAttribute('aria-current','page');});
+nav.querySelectorAll('a').forEach(link=>{const active=new URL(link.href).pathname.endsWith(`/${page}/`);link.classList.toggle('active',active);if(active)link.setAttribute('aria-current','page');});
 if(page==='home'){const logo=document.querySelector('.site-header .brand');logo.classList.add('active');logo.setAttribute('aria-current','page');}
 document.querySelector('#year').textContent=new Date().getFullYear();
 document.addEventListener('keydown',event=>{if(event.key!=='Tab'||!nav.classList.contains('open'))return;const items=[menu,...nav.querySelectorAll('a')];if(event.shiftKey&&document.activeElement===items[0]){event.preventDefault();items.at(-1).focus();}else if(!event.shiftKey&&document.activeElement===items.at(-1)){event.preventDefault();items[0].focus();}});
