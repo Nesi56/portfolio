@@ -1,4 +1,4 @@
-# Nesithekoolkod
+# Nesi56
 
 Static multi-page portfolio. Black background, #690000 primary red, and a shared navigation with an 800ms decoding effect on load and pointer exit.
 
