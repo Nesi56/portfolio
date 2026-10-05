@@ -1,366 +1,127 @@
-(() => {
-  'use strict';
+'use strict';
+const username='Nesi56';
+const nav=document.querySelector('#navigation');
+const menu=document.querySelector('.menu-toggle');
+function closeMenu(){nav.classList.remove('open');menu.setAttribute('aria-expanded','false');menu.setAttribute('aria-label','Open menu');document.body.classList.remove('menu-open');}
+menu.addEventListener('click',()=>{const open=menu.getAttribute('aria-expanded')!=='true';nav.classList.toggle('open',open);menu.setAttribute('aria-expanded',String(open));menu.setAttribute('aria-label',open?'Close menu':'Open menu');document.body.classList.toggle('menu-open',open);});
+nav.addEventListener('click',event=>{if(event.target.closest('a'))closeMenu();});
+document.addEventListener('keydown',event=>{if(event.key==='Escape'&&nav.classList.contains('open')){closeMenu();menu.focus();}});
+matchMedia('(min-width:721px)').addEventListener('change',event=>{if(event.matches)closeMenu();});
 
-  const $ = (selector, root = document) => root.querySelector(selector);
-  const $$ = (selector, root = document) => [...root.querySelectorAll(selector)];
+const page=document.body.dataset.page;
+nav.querySelectorAll('a').forEach(link=>{const active=link.getAttribute('href')===`/${page}/`;link.classList.toggle('active',active);if(active)link.setAttribute('aria-current','page');});
+if(page==='home'){const logo=document.querySelector('.site-header .brand');logo.classList.add('active');logo.setAttribute('aria-current','page');}
+document.querySelector('#year').textContent=new Date().getFullYear();
+document.addEventListener('keydown',event=>{if(event.key!=='Tab'||!nav.classList.contains('open'))return;const items=[menu,...nav.querySelectorAll('a')];if(event.shiftKey&&document.activeElement===items[0]){event.preventDefault();items.at(-1).focus();}else if(!event.shiftKey&&document.activeElement===items.at(-1)){event.preventDefault();items[0].focus();}});
+// Keep accessible names stable while the visual labels decode.
+const decodeMotion=matchMedia('(prefers-reduced-motion: reduce)');
+const decodeFrames=new WeakMap();
+nav.querySelectorAll('a').forEach(link=>{
+ const label=link.textContent.trim();link.dataset.label=label;link.setAttribute('aria-label',label);
+ const wrapper=document.createElement('span');wrapper.className='nav-label';wrapper.dataset.label=label;wrapper.setAttribute('aria-hidden','true');
+ const text=document.createElement('span');text.className='nav-label-text';text.textContent=label;wrapper.append(text);link.replaceChildren(wrapper);
+ link.addEventListener('pointerenter',()=>settleLabel(link));link.addEventListener('pointerleave',()=>decodeLabel(link));
+ link.addEventListener('focus',()=>settleLabel(link));link.addEventListener('blur',()=>{if(!link.matches(':hover'))decodeLabel(link);});
+});
+function decodeLabel(link){
+ const label=link.dataset.label,text=link.querySelector('.nav-label-text');if(!text)return;
+ cancelAnimationFrame(decodeFrames.get(link));
+ if(decodeMotion.matches){text.textContent=label;return;}
+ const chars='ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789#$%<>/';let start;let last=-1;
+ function frame(now){start??=now;const elapsed=now-start;if(elapsed>=800){text.textContent=label;decodeFrames.delete(link);return;}
+ const tick=Math.floor(elapsed/50);if(tick!==last){last=tick;const revealed=Math.floor(elapsed/800*label.length);text.textContent=Array.from(label,(char,index)=>index<revealed||char===' '?char:chars[Math.floor(Math.random()*chars.length)]).join('');}
+ decodeFrames.set(link,requestAnimationFrame(frame));}
+ decodeFrames.set(link,requestAnimationFrame(frame));
+}
+decodeMotion.addEventListener('change',()=>{if(decodeMotion.matches)nav.querySelectorAll('a').forEach(decodeLabel);});
 
-  const windowEl = $('#portfolioWindow');
-  const titlebar = $('#titlebar');
-  const closedDialog = $('#closedDialog');
-  const startButton = $('#startButton');
-  const startMenu = $('#startMenu');
-  const taskWindow = $('#taskWindow');
-  const statusText = $('#statusText');
-  const poemModal = $('#poemModal');
-  const terminalOutput = $('#terminalOutput');
-  const terminalInput = $('#terminalInput');
+function settleLabel(link){cancelAnimationFrame(decodeFrames.get(link));decodeFrames.delete(link);link.querySelector('.nav-label-text').textContent=link.dataset.label;}
+nav.querySelectorAll('a').forEach(decodeLabel);
 
-  let activeTab = 'home';
-  let isMaximized = false;
-  let dragState = null;
+const status=document.querySelector('#projectStatus');
+const retry=document.querySelector('#retry');
+const grid=document.querySelector('#projectGrid');
+const board=document.querySelector('#skillBoard');
+let repositories=[];
+let selectedLanguage='all';
+const libraryNames=['FastAPI','React','TypeScript','MapLibre','Expo','NumPy','PyTorch','TensorFlow','OpenCV','Flask','Django','Next.js','Tailwind','Docker','PostgreSQL','MongoDB'];
+function technologies(repo){
+ const result=repo.language?[repo.language]:[];
+ for(const name of libraryNames){const escaped=name.replace(/[.*+?^${}()|[\]\\]/g,'\\$&');if(new RegExp(`\\b${escaped}(?=\\b|[., ])`,'i').test(repo.description||'')&&!result.includes(name))result.push(name);}
+ return result;
+}
+function element(tag,className,text){const node=document.createElement(tag);if(className)node.className=className;if(text!==undefined)node.textContent=text;return node;}
+function repoLink(repo,label){const link=element('a','text-link',label);link.href=`https://github.com/Nesi56/${encodeURIComponent(repo.name)}`;link.target='_blank';link.rel='noopener noreferrer';return link;}
+function renderProjects(){
+ const query=document.querySelector('#search').value.trim().toLowerCase();
+ const visible=repositories.filter(repo=>(selectedLanguage==='all'||repo.language===selectedLanguage)&&`${repo.name} ${repo.description||''}`.toLowerCase().includes(query));
+ grid.replaceChildren();status.textContent=visible.length?`${visible.length} projects · Nesi56 on GitHub`:'No matching projects. Try another search or filter.';
+ visible.forEach((repo,index)=>{
+ const card=element('article','project-card');
+ const cover=element('div','project-cover');cover.setAttribute('aria-hidden','true');cover.append(element('span','cover-number',String(index+1).padStart(2,'0')),element('span','cover-name',repo.name),element('span','cover-type',repo.language||'Source code'));
+ const content=element('div','project-content');content.append(element('h2','',repo.name),element('p','repo-meta',repo.fork?'Open-source fork':'Personal project'),element('p','',repo.description||'Source code and updates are available in this repository.'));
+ const tags=element('div','project-tags');technologies(repo).forEach(name=>tags.append(element('span','',name)));content.append(tags);
+ const actions=element('div','project-actions');const button=element('button','button','View details');button.addEventListener('click',()=>openProject(repo));actions.append(button,repoLink(repo,'Source code ↗'));content.append(actions);card.append(cover,content);grid.append(card);
+ });
+}
+function openProject(repo){
+ const dialog=document.querySelector('#projectDialog'),details=document.querySelector('#projectDetails');details.replaceChildren();
+ const title=element('h2','',repo.name);title.id='detailTitle';dialog.setAttribute('aria-labelledby','detailTitle');
+ details.append(title,element('p','',repo.description||'Explore the source code and updates on GitHub.'),element('h3','','Technologies'));
+ const tags=element('div','project-tags');const tools=technologies(repo);tools.forEach(name=>tags.append(element('span','',name)));if(!tools.length)tags.append(element('p','','No languages or libraries reported yet.'));details.append(tags,element('p','repo-meta',`Updated ${new Date(repo.updated_at).toLocaleDateString()} · ${repo.stargazers_count} stars`),repoLink(repo,'Open repository ↗'));
+ dialog.showModal();
+}
+let selectedYear='all';
+let selectedCluster=null;
+const clusterPositions=new Map();
+function repoLanguages(repo){return repo.languages || (repo.language?[repo.language]:[]);}
+function selectCluster(language){selectedCluster=language;renderBoard();}
+function renderBoard(){
+ board.replaceChildren();
+ const scoped=repositories.filter(repo=>selectedYear==='all'||String(new Date(repo.created_at).getUTCFullYear())===selectedYear);
+ const languages=[...new Set(scoped.flatMap(repoLanguages))].sort();
+ if(!languages.includes(selectedCluster))selectedCluster=null;
+ const related=selectedCluster?scoped.filter(repo=>repoLanguages(repo).includes(selectedCluster)):[];
+ const connected=new Set(related.flatMap(repoLanguages));
+ const edges=[];
+ for(let i=0;i<languages.length;i++)for(let j=i+1;j<languages.length;j++){
+  const shared=scoped.filter(repo=>repoLanguages(repo).includes(languages[i])&&repoLanguages(repo).includes(languages[j]));
+  if(shared.length)edges.push({a:languages[i],b:languages[j],count:shared.length});
+ }
+ status.textContent=languages.length?`${languages.length} languages · ${edges.length} connections · ${selectedYear==='all'?'all years':selectedYear}`:'No reported languages for this year. Choose another year.';
+ const positions=new Map();const ring=languages.filter(language=>language!==selectedCluster);
+ ring.forEach((language,index)=>{const angle=2*Math.PI*index/Math.max(ring.length,1)-Math.PI/2;positions.set(language,{x:350+265*Math.cos(angle),y:300+220*Math.sin(angle)});});
+ if(selectedCluster)positions.set(selectedCluster,{x:350,y:300});
+ const layoutKey=`${selectedYear}:${selectedCluster||'all'}`;
+ for(const language of languages){const saved=clusterPositions.get(`${layoutKey}:${language}`);if(saved)positions.set(language,saved);}
+ const svg=document.createElementNS('http://www.w3.org/2000/svg','svg');svg.setAttribute('viewBox','0 0 700 600');svg.setAttribute('preserveAspectRatio','none');svg.setAttribute('aria-hidden','true');svg.classList.add('cluster-lines');
+ edges.forEach(edge=>{const a=positions.get(edge.a),b=positions.get(edge.b),line=document.createElementNS(svg.namespaceURI,'line');line.dataset.a=edge.a;line.dataset.b=edge.b;line.setAttribute('x1',a.x);line.setAttribute('y1',a.y);line.setAttribute('x2',b.x);line.setAttribute('y2',b.y);const highlighted=selectedCluster&&(edge.a===selectedCluster||edge.b===selectedCluster);line.setAttribute('class',highlighted?'connection highlighted':selectedCluster?'connection muted':'connection');svg.append(line);});board.append(svg);
+ languages.forEach(language=>{const pos=positions.get(language),button=element('button','cluster-node',language);button.dataset.language=language;button.style.left=`${pos.x/7}%`;button.style.top=`${pos.y/6}%`;button.setAttribute('aria-pressed',String(language===selectedCluster));button.classList.toggle('connected',connected.has(language)&&language!==selectedCluster);button.classList.toggle('unrelated',!!selectedCluster&&!connected.has(language));let dragged=false,dragStart=null;
+ button.addEventListener('pointerdown',event=>{if(event.button!==0)return;dragged=false;dragStart={x:event.clientX,y:event.clientY,position:{...positions.get(language)},id:event.pointerId};button.setPointerCapture(event.pointerId);});
+ button.addEventListener('pointermove',event=>{if(!dragStart||event.pointerId!==dragStart.id)return;const dx=event.clientX-dragStart.x,dy=event.clientY-dragStart.y;if(!dragged&&Math.hypot(dx,dy)<5)return;dragged=true;button.classList.add('dragging');const rect=board.getBoundingClientRect();const marginX=Math.max(60,button.offsetWidth/2/rect.width*700+8),marginY=Math.max(35,button.offsetHeight/2/rect.height*600+8);const position={x:Math.max(marginX,Math.min(700-marginX,dragStart.position.x+dx/rect.width*700)),y:Math.max(marginY,Math.min(600-marginY,dragStart.position.y+dy/rect.height*600))};positions.set(language,position);clusterPositions.set(`${layoutKey}:${language}`,position);button.style.left=`${position.x/7}%`;button.style.top=`${position.y/6}%`;svg.querySelectorAll('line').forEach(line=>{const a=positions.get(line.dataset.a),b=positions.get(line.dataset.b);line.setAttribute('x1',a.x);line.setAttribute('y1',a.y);line.setAttribute('x2',b.x);line.setAttribute('y2',b.y);});});
+ function endDrag(event){if(!dragStart||event.pointerId!==dragStart.id)return;dragStart=null;button.classList.remove('dragging');if(button.hasPointerCapture(event.pointerId))button.releasePointerCapture(event.pointerId);}
+ button.addEventListener('pointerup',endDrag);button.addEventListener('pointercancel',endDrag);
+ button.addEventListener('click',event=>{if(dragged){dragged=false;event.preventDefault();return;}selectCluster(language);});board.append(button);});
+ if(!languages.length)board.append(element('p','cluster-empty','No language data for this year.'));
+ const detail=document.querySelector('#skillDetail');detail.replaceChildren();
+ if(!selectedCluster){detail.append(element('h2','','Select a language'),element('p','','Lines connect languages used together in at least one repository. Select a node to explore its connections.'));return;}
+ detail.append(element('h2','',selectedCluster),element('p','',`${related.length} project${related.length===1?'':'s'}${selectedYear==='all'?' across all years':' created in '+selectedYear}`),element('h3','','Used alongside'));
+ const other=[...connected].filter(language=>language!==selectedCluster).sort(),list=element('div','related-languages');
+ other.forEach(language=>{const count=related.filter(repo=>repoLanguages(repo).includes(language)).length;const button=element('button','related-language',`${language} · ${count}`);button.addEventListener('click',()=>selectCluster(language));list.append(button);});
+ if(!other.length)list.append(element('p','','No other languages reported in these projects.'));detail.append(list,element('h3','','Shared projects'));
+ related.forEach(repo=>{const item=element('article','skill-project');item.append(element('h3','',repo.name),element('p','',repo.description||'Public GitHub repository.'),element('p','connection-source',repoLanguages(repo).join(' · ')),repoLink(repo,'Explore repository ↗'));detail.append(item);});
+ const reset=element('button','button','Show all connections');reset.addEventListener('click',()=>{selectedCluster=null;renderBoard();});detail.append(reset);
+}
+async function loadRepositories(){
+ retry.hidden=true;status.textContent='Loading GitHub projects…';const controller=new AbortController(),timer=setTimeout(()=>controller.abort(),12000);
+ try{const response=await fetch('https://api.github.com/users/Nesi56/repos?sort=updated&per_page=100',{signal:controller.signal,headers:{Accept:'application/vnd.github+json'}});if(!response.ok)throw Error();const data=await response.json();if(!Array.isArray(data))throw Error();repositories=data.filter(repo=>!repo.archived).sort((a,b)=>Number(a.fork)-Number(b.fork)||new Date(b.updated_at)-new Date(a.updated_at));
+ if(grid){const filters=document.querySelector('.filters');filters.querySelectorAll('button:not([data-language="all"])').forEach(button=>button.remove());[...new Set(repositories.map(repo=>repo.language).filter(Boolean))].sort().forEach(name=>{const button=element('button','',name);button.dataset.language=name;button.setAttribute('aria-pressed',String(selectedLanguage===name));button.classList.toggle('selected',selectedLanguage===name);filters.append(button);});renderProjects();}else{
+ const results=await Promise.allSettled(repositories.map(async repo=>{const response=await fetch(`https://api.github.com/repos/Nesi56/${encodeURIComponent(repo.name)}/languages`,{signal:controller.signal});if(!response.ok)throw Error();const languages=await response.json();repo.languages=Object.keys(languages);}));
+ const year=document.querySelector('#skillYear');const previous=year.value;year.querySelectorAll('option:not([value="all"])').forEach(option=>option.remove());[...new Set(repositories.map(repo=>new Date(repo.created_at).getUTCFullYear()))].filter(Number.isFinite).sort((a,b)=>b-a).forEach(value=>{const option=element('option','',String(value));option.value=String(value);year.append(option);});year.value=previous;selectedYear=year.value||'all';renderBoard();
+ }
+ }catch{status.textContent='GitHub could not load. Retry or visit github.com/Nesi56.';retry.hidden=false;}finally{clearTimeout(timer);}
+}
+if(grid){document.querySelector('#search').addEventListener('input',renderProjects);document.querySelector('.filters').addEventListener('click',event=>{const button=event.target.closest('button');if(!button)return;selectedLanguage=button.dataset.language;document.querySelectorAll('.filters button').forEach(item=>{item.classList.toggle('selected',item===button);item.setAttribute('aria-pressed',String(item===button));});renderProjects();});document.querySelector('.dialog-close').addEventListener('click',()=>document.querySelector('#projectDialog').close());}
+if(grid||board){retry.addEventListener('click',loadRepositories);loadRepositories();}
 
-  const dialogue = [
-    'Okay, fine. I helped make your portfolio look cooler. Just don’t waste it by shipping something boring.',
-    'Arch and Hyprland vibes? Good. If the desktop doesn’t look slightly dangerous, what’s even the point?',
-    'That mission-control layout? Totally intentional. Cute can still look classified.',
-    'The Terry-Davis-style part is the build spirit: make it weird, make it bold, make it yours.',
-    'Now go open the projects tab already. I didn’t stand here for nothing.'
-  ];
-  let dialogueIndex = 0;
-
-  const fallbackProjects = [
-    {
-      name: 'mission-one',
-      description: 'Connect this card to one of your pinned GitHub repositories.',
-      html_url: 'https://github.com/nesi56',
-      language: 'JavaScript',
-      stargazers_count: 0,
-      updated_at: new Date().toISOString()
-    },
-    {
-      name: 'mission-two',
-      description: 'A placeholder for the next bold, useful, or experimental build.',
-      html_url: 'https://github.com/nesi56',
-      language: 'HTML',
-      stargazers_count: 0,
-      updated_at: new Date().toISOString()
-    },
-    {
-      name: 'mission-three',
-      description: 'Replace this fallback by pushing another public repository.',
-      html_url: 'https://github.com/nesi56',
-      language: 'CSS',
-      stargazers_count: 0,
-      updated_at: new Date().toISOString()
-    }
-  ];
-
-  function setStatus(message) {
-    statusText.textContent = message;
-  }
-
-  function openWindow() {
-    windowEl.classList.remove('minimized');
-    windowEl.hidden = false;
-    closedDialog.hidden = true;
-    taskWindow.classList.add('active');
-  }
-
-  function openTab(tabName) {
-    const targetPage = $(`[data-page="${tabName}"]`);
-    if (!targetPage) return;
-
-    openWindow();
-    activeTab = tabName;
-
-    $$('.tab').forEach(tab => {
-      const active = tab.dataset.tab === tabName;
-      tab.classList.toggle('active', active);
-      tab.setAttribute('aria-selected', String(active));
-    });
-
-    $$('.page').forEach(page => page.classList.toggle('active', page.dataset.page === tabName));
-    startMenu.hidden = true;
-    startButton.classList.remove('pressed');
-    setStatus(`opened ${tabName}.exe`);
-
-    if (tabName === 'terminal') {
-      requestAnimationFrame(() => terminalInput.focus());
-    }
-
-    if (tabName === 'stack') {
-      requestAnimationFrame(() => {
-        $$('.meter').forEach(meter => {
-          $('.meter-track span', meter).style.width = `${meter.dataset.value}%`;
-        });
-      });
-    }
-  }
-
-  $$('[data-open-tab]').forEach(button => {
-    button.addEventListener('click', event => {
-      if (button.tagName === 'A') return;
-      event.preventDefault();
-      openTab(button.dataset.openTab);
-    });
-  });
-
-  $$('.tab').forEach(tab => tab.addEventListener('click', () => openTab(tab.dataset.tab)));
-
-  $('#minimizeBtn').addEventListener('click', () => {
-    windowEl.classList.add('minimized');
-    taskWindow.classList.remove('active');
-    setStatus('window minimized');
-  });
-
-  $('#maximizeBtn').addEventListener('click', () => {
-    isMaximized = !isMaximized;
-    windowEl.classList.toggle('maximized', isMaximized);
-    setStatus(isMaximized ? 'maximum mission mode enabled' : 'window restored');
-  });
-
-  $('#closeBtn').addEventListener('click', () => {
-    windowEl.hidden = true;
-    closedDialog.hidden = false;
-    taskWindow.classList.remove('active');
-  });
-
-  closedDialog.addEventListener('click', openWindow);
-  taskWindow.addEventListener('click', () => {
-    if (windowEl.hidden || windowEl.classList.contains('minimized')) openWindow();
-    else windowEl.classList.add('minimized');
-    taskWindow.classList.toggle('active', !windowEl.classList.contains('minimized') && !windowEl.hidden);
-  });
-
-  startButton.addEventListener('click', event => {
-    event.stopPropagation();
-    startMenu.hidden = !startMenu.hidden;
-    startButton.classList.toggle('pressed', !startMenu.hidden);
-  });
-
-  startMenu.addEventListener('click', event => event.stopPropagation());
-  document.addEventListener('click', () => {
-    startMenu.hidden = true;
-    startButton.classList.remove('pressed');
-  });
-
-  $('#shutdownButton').addEventListener('click', () => {
-    startMenu.hidden = true;
-    startButton.classList.remove('pressed');
-    setStatus('it is now safe to close unnecessary tabs');
-    $('#menuMessage').textContent = '“Log off, regroup, come back stronger.”';
-  });
-
-  $('#dialogueNext').addEventListener('click', () => {
-    dialogueIndex = (dialogueIndex + 1) % dialogue.length;
-    $('#dialogueText').textContent = dialogue[dialogueIndex];
-    setStatus(`dialogue line ${dialogueIndex + 1}/${dialogue.length}`);
-  });
-
-  function showPoem() {
-    poemModal.hidden = false;
-    setStatus('opened note.txt');
-  }
-  function hidePoem() { poemModal.hidden = true; }
-  $('#poemButton').addEventListener('click', showPoem);
-  $('#poemClose').addEventListener('click', hidePoem);
-  poemModal.addEventListener('click', event => { if (event.target === poemModal) hidePoem(); });
-
-  document.addEventListener('keydown', event => {
-    if (event.key === 'Escape') {
-      hidePoem();
-      startMenu.hidden = true;
-      startButton.classList.remove('pressed');
-    }
-  });
-
-  function updateClock() {
-    $('#clock').textContent = new Intl.DateTimeFormat(undefined, {
-      hour: 'numeric',
-      minute: '2-digit'
-    }).format(new Date());
-  }
-  updateClock();
-  setInterval(updateClock, 1000);
-
-  function projectSymbol(language = '') {
-    const symbols = {
-      JavaScript: 'JS', TypeScript: 'TS', HTML: '</>', CSS: '#', Python: 'Py',
-      Rust: 'Rs', 'C++': 'C+', C: 'C', Java: 'Jv', Shell: '$', Svelte: 'Sv'
-    };
-    return symbols[language] || '◇';
-  }
-
-  function renderProjects(projects, sourceText) {
-    const palette = [
-      ['#37111d', '#8a334e'],
-      ['#131f28', '#436780'],
-      ['#4a1625', '#c06d8a'],
-      ['#1c1718', '#76505c'],
-      ['#2b2834', '#808aa8'],
-      ['#3b121f', '#a24f66']
-    ];
-
-    $('#projectGrid').innerHTML = projects.slice(0, 6).map((project, index) => {
-      const [a, b] = palette[index % palette.length];
-      const updated = new Intl.DateTimeFormat(undefined, { year: 'numeric', month: 'short' }).format(new Date(project.updated_at));
-      const description = project.description || 'A repository from the nesi56 GitHub profile.';
-      const language = project.language || 'Code';
-      return `
-        <article class="project-card">
-          <div class="project-banner" style="--card-a:${a};--card-b:${b}"><span>${projectSymbol(project.language)}</span></div>
-          <div class="project-copy">
-            <div class="project-title-row">
-              <h3>${escapeHtml(project.name)}</h3>
-              <span class="project-tag">${escapeHtml(language)}</span>
-            </div>
-            <p class="project-description">${escapeHtml(description)}</p>
-            <div class="project-meta"><span>★ ${project.stargazers_count ?? 0}</span><span>updated ${updated}</span></div>
-            <a class="project-link" href="${project.html_url}" target="_blank" rel="noreferrer">open repository ↗</a>
-          </div>
-        </article>`;
-    }).join('');
-
-    $('#projectStatus').textContent = `${projects.length} object(s) · ${sourceText}`;
-  }
-
-  function escapeHtml(value) {
-    return String(value).replace(/[&<>'"]/g, character => ({
-      '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;'
-    })[character]);
-  }
-
-  async function loadGitHubProjects() {
-    try {
-      const response = await fetch('https://api.github.com/users/nesi56/repos?sort=updated&per_page=100', {
-        headers: { Accept: 'application/vnd.github+json' }
-      });
-      if (!response.ok) throw new Error(`GitHub returned ${response.status}`);
-      const repos = await response.json();
-      const visible = repos.filter(repo => !repo.fork).slice(0, 6);
-      $('#repoCount').textContent = repos.length;
-      renderProjects(visible.length ? visible : fallbackProjects, 'live');
-    } catch (error) {
-      console.warn('Could not load GitHub projects:', error);
-      $('#repoCount').textContent = '?';
-      renderProjects(fallbackProjects, 'offline fallback');
-    }
-  }
-
-  const commands = {
-    help: [
-      'commands: help, about, stack, projects, github, neofetch, intel, launch, poem, date, clear'
-    ],
-    about: [
-      'nesi56 // building useful, strange, and ambitious things',
-      'portfolio // plain HTML, CSS, and JavaScript // burgundy command center build'
-    ],
-    stack: ['html  css  javascript  arch-ish  hyprland-feel  aerospace  shell  curiosity'],
-    projects: ['Opening projects.exe...'],
-    github: ['Opening github.com/nesi56...'],
-    neofetch: [
-      '       /\\        guest@nesi56',
-      '      /  \\       os: nesi56 command center',
-      '     / /\\ \\      base: Arch-ish',
-      '    / ____ \\     wm: Hyprland-inspired mood',
-      '   /_/    \\_\\    shell: imagination',
-      '                  status: mission ready'
-    ],
-    intel: [
-      'theme profile:',
-      '- doki doki atmosphere',
-      '- dark burgundy and black',
-      '- hacker / red-team aesthetic',
-      '- aerospace mission-control energy'
-    ],
-    launch: [
-      'launch checklist:',
-      '[x] curiosity',
-      '[x] systems thinking',
-      '[x] visual identity',
-      '[ ] more public repos'
-    ],
-    poem: [
-      'black glass / burgundy light',
-      'stubborn code under a calm face',
-      'cute enough to approach / sharp enough to remember'
-    ]
-  };
-
-  function appendTerminal(text, className = '') {
-    const line = document.createElement('div');
-    line.textContent = text;
-    if (className) line.className = className;
-    terminalOutput.append(line);
-    terminalOutput.scrollTop = terminalOutput.scrollHeight;
-  }
-
-  $('#terminalForm').addEventListener('submit', event => {
-    event.preventDefault();
-    const raw = terminalInput.value.trim();
-    if (!raw) return;
-    appendTerminal(`guest@nesi56 ~ % ${raw}`, 'terminal-command');
-    terminalInput.value = '';
-
-    const command = raw.toLowerCase();
-    if (command === 'clear') {
-      terminalOutput.innerHTML = '';
-      return;
-    }
-    if (command === 'projects') {
-      commands.projects.forEach(line => appendTerminal(line));
-      setTimeout(() => openTab('projects'), 250);
-      return;
-    }
-    if (command === 'github') {
-      commands.github.forEach(line => appendTerminal(line));
-      window.open('https://github.com/nesi56', '_blank', 'noopener');
-      return;
-    }
-    if (command === 'date') {
-      appendTerminal(new Date().toString());
-      return;
-    }
-    const response = commands[command];
-    if (response) response.forEach(line => appendTerminal(line));
-    else {
-      appendTerminal(`command not found: ${raw}`, 'terminal-error');
-      appendTerminal('try: help');
-    }
-  });
-
-  titlebar.addEventListener('pointerdown', event => {
-    if (event.target.closest('button') || isMaximized || window.innerWidth <= 670) return;
-    const rect = windowEl.getBoundingClientRect();
-    dragState = {
-      pointerId: event.pointerId,
-      offsetX: event.clientX - rect.left,
-      offsetY: event.clientY - rect.top
-    };
-    titlebar.setPointerCapture(event.pointerId);
-    windowEl.style.transform = 'none';
-    windowEl.style.left = `${rect.left}px`;
-    windowEl.style.top = `${rect.top}px`;
-  });
-
-  titlebar.addEventListener('pointermove', event => {
-    if (!dragState || event.pointerId !== dragState.pointerId) return;
-    const maxLeft = window.innerWidth - windowEl.offsetWidth;
-    const maxTop = window.innerHeight - windowEl.offsetHeight - 40;
-    const left = Math.max(0, Math.min(maxLeft, event.clientX - dragState.offsetX));
-    const top = Math.max(0, Math.min(maxTop, event.clientY - dragState.offsetY));
-    windowEl.style.left = `${left}px`;
-    windowEl.style.top = `${top}px`;
-  });
-
-  titlebar.addEventListener('pointerup', event => {
-    if (!dragState || event.pointerId !== dragState.pointerId) return;
-    dragState = null;
-    titlebar.releasePointerCapture(event.pointerId);
-  });
-
-  window.addEventListener('load', () => {
-    setTimeout(() => $('#bootScreen').classList.add('done'), 1050);
-    loadGitHubProjects();
-  });
-})();
+if(board)document.querySelector('#skillYear').addEventListener('change',event=>{selectedYear=event.target.value;renderBoard();});
